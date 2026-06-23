@@ -1,11 +1,12 @@
 import HeroSection from "../components/HeroSection";
-import Navbar from "../components/Navbar";
+import Categories from "../components/Categories";
 
 function Home(){
     return(
         <div className="w-full bg-amber-100">
-  <Navbar/>
+  
   <HeroSection/>
+  <Categories/>
   </div>
     )
 }
