@@ -2,7 +2,7 @@ import Navbar from "../components/Navbar"
 import {Outlet} from "react-router-dom"
 function Layout(){
     return (
-         <div className="w-screen min-h-dvh flex flex-col bg-transparent overflow-x-hidden">
+         <div className="w-full min-h-dvh flex flex-col bg-transparent overflow-x-hidden">
             
             {/* Navbar sits safely at the top */}
             <Navbar />

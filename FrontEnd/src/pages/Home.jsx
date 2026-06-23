@@ -3,7 +3,7 @@ import Categories from "../components/Categories";
 
 function Home(){
     return(
-        <div className="w-full bg-amber-100">
+        <div className="w-full  ">
   
   <HeroSection/>
   <Categories/>
