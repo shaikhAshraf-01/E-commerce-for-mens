@@ -1,5 +1,6 @@
 import HeroSection from "../components/HeroSection";
 import Categories from "../components/Categories";
+import Promotions from "../components/Promotions";
 
 function Home(){
     return(
@@ -7,6 +8,7 @@ function Home(){
   
   <HeroSection/>
   <Categories/>
+  <Promotions/>
   </div>
     )
 }

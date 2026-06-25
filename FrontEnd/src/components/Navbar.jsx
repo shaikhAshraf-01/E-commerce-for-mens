@@ -5,7 +5,7 @@ function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="w-full h-auto px-4 md:px-7 py-3 flex justify-between items-center relative border-b border-gray-100 bg-yellow-200">
+        <nav className="w-full fixed h-auto px-4 md:px-7 py-3 flex justify-between items-center  border-b border-gray-100 bg-yellow-200">
            
            {/* 1. BRAND LOGO */}
            <div className="z-50">
