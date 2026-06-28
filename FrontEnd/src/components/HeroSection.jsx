@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react"
 import { heroImage } from "../assets/data/imagedata.js";
-
+import {NavLink} from "react-router-dom"
 
 
 function HeroSection(){ 
@@ -26,11 +26,12 @@ useEffect(()=>{
          <p className="text-sm mt-3">Discover modern essentials crafted for <br className="hidden md:block" /> comfort, quality and timeless style.</p>
          
          <div className="mt-5 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-            <button className="bg-black border-black border-2  text-white rounded-[2px] p-1 mr-3 md:mb-0 hover:bg-white hover:text-black">
-              SHOP NOW
-            </button>
-            <button className="border-black border-2 rounded-[2px] p-1">
-              EXPLORE COLLECTION
+           
+              < NavLink to="/shop" className="bg-black border-black border-2  text-white rounded-[2px] p-1 mr-3 md:mb-0 hover:bg-white hover:text-black">
+               SHOP NOW </NavLink>
+           
+            <button NavLink to="/shop" className="border-black border-2 rounded-[2px] p-1">
+              EXPLORE CATEGORIES
             </button>
          </div>
       </div>
