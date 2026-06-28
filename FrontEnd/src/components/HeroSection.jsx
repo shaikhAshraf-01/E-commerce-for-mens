@@ -1,18 +1,7 @@
 import {useState, useEffect} from "react"
 import { heroImage } from "../assets/data/imagedata.js";
-import {motion} from "framer-motion"
 
-const slideUp = {
-  hidden: { opacity: 0, y: 80 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 1.2,
-      ease: [0.25, 0.1, 0.25, 1],
-    },
-  },
-};
+
 
 function HeroSection(){ 
 const[currentImage, setCurrentImage]=useState(0);
@@ -26,12 +15,7 @@ useEffect(()=>{
 },[])
 
   return( 
-    <motion.div 
-    variants={slideUp}
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true,  margin:"-100px" }}
-    >
+   
     <div className="w-full h-auto md:h-auto flex flex-col md:flex-row bg-blue-300 overflow-hidden"> 
       
       {/* TEXT CONTAINER */}
@@ -66,7 +50,7 @@ useEffect(()=>{
 
       </div>
     </div> 
-    </motion.div>
+  
   ) 
 } 
 

@@ -3,38 +3,70 @@ import { FiSearch, FiUser, FiHeart, FiShoppingBag, FiMenu, FiX } from 'react-ico
 
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false); // New state to track search overlay
 
     return (
-        <nav className="w-full fixed h-auto px-4 md:px-7 py-3 flex justify-between items-center  border-b border-gray-100 bg-yellow-200">
+        <nav className="w-full fixed top-0 left-0 h-16 px-4 md:px-7 flex justify-between items-center border-b border-gray-100 bg-yellow-200 z-50">
            
-           {/* 1. BRAND LOGO */}
-           <div className="z-50">
+           {/* 1. BRAND LOGO (Hidden on mobile if search is active to save room) */}
+           <div className={`z-50 ${isSearchOpen ? 'hidden sm:block' : 'block'}`}>
                 <h1 className="font-black font-sans text-2xl tracking-wider leading-none">URBAN</h1>
-                {/* Fixed static positioning instead of negative margin for cleaner code */}
                 <h3 className="text-xs font-bold tracking-widest text-gray-500 mt-0.5 pl-9">MEN</h3>
            </div>
 
-           {/* 2. MIDDLE LINKS (Hidden on mobile, flex on desktop) */}
-           <div className="hidden md:block">
-                <ul className="flex gap-6 font-medium text-sm text-gray-700">
-                    <li className="hover:text-black cursor-pointer transition">Home</li>
-                    <li className="hover:text-black cursor-pointer transition">Shop</li>
-                    <li className="hover:text-black cursor-pointer transition">Categories</li>
-                    <li className="hover:text-black cursor-pointer transition">New Arrivals</li>
-                </ul>
+           {/* 2. DYNAMIC CENTER: NAVIGATION LINKS OR SEARCH BAR */}
+           <div className="flex-1 max-w-xl mx-4 sm:mx-8 md:mx-12">
+                {/* Desktop Menu: Hidden when search is active */}
+                {!isSearchOpen && (
+                    <div className="hidden md:block text-center">
+                        <ul className="flex justify-center gap-6 font-medium text-sm text-gray-700">
+                            <li className="hover:text-black cursor-pointer transition">Home</li>
+                            <li className="hover:text-black cursor-pointer transition">Shop</li>
+                            <li className="hover:text-black cursor-pointer transition">Categories</li>
+                            <li className="hover:text-black cursor-pointer transition">New Arrivals</li>
+                        </ul>
+                    </div>
+                )}
+
+                {/* Shared Search Input Field: Always visible on mobile, toggled on PC */}
+                <div className={`w-full ${isSearchOpen ? 'block' : 'hidden md:hidden'}`}>
+                    <div className="relative flex items-center w-full bg-white border border-gray-300 rounded-md px-3 py-1.5 shadow-sm">
+                        <FiSearch className="text-gray-400 shrink-0 mr-2" size={18} />
+                        <input 
+                            type="text" 
+                            placeholder="Search products..." 
+                            className="w-full bg-transparent text-sm text-gray-800 outline-none placeholder-gray-400"
+                            autoFocus={isSearchOpen}
+                        />
+                        {/* Close button for search mode */}
+                        <button 
+                            onClick={() => setIsSearchOpen(false)}
+                            className="text-gray-400 hover:text-black ml-2"
+                        >
+                            <FiX size={18} />
+                        </button>
+                    </div>
+                </div>
            </div>
 
-           {/* 3. UTILITY ICONS & MOBILE HAMBURGER BUTTON */}
-           <div className="flex items-center gap-4 md:gap-6 z-50">
-                 <ul className="flex gap-4 md:gap-6 text-gray-700">
-                    <li className="hover:text-black cursor-pointer"><FiSearch size={20}/></li>
-                    {/* Hidden profile/likes on tiny mobile screens to preserve icon room */}
+           {/* 3. UTILITY ICONS & HAMBURGER */}
+           <div className="flex items-center gap-3 md:gap-6 z-50">
+                 <ul className="flex items-center gap-3 md:gap-6 text-gray-700">
+                    {/* Search Trigger Icon: Hidden if search is already active */}
+                    {!isSearchOpen && (
+                        <li 
+                            onClick={() => setIsSearchOpen(true)} 
+                            className="hover:text-black cursor-pointer flex items-center"
+                        >
+                            <FiSearch size={20}/>
+                        </li>
+                    )}
                     <li className="hidden sm:block hover:text-black cursor-pointer"><FiUser size={20}/></li>
                     <li className="hidden sm:block hover:text-black cursor-pointer"><FiHeart size={20}/></li>
-                    <li className="hover:text-black cursor-pointer relative"><FiShoppingBag size={20}/></li>
+                    <li className="hover:text-black cursor-pointer relative flex items-center"><FiShoppingBag size={20}/></li>
                 </ul>
 
-                {/* Mobile Menu Trigger Icon */}
+                {/* Mobile Menu Trigger (Hamburger) */}
                 <button 
                     onClick={() => setIsOpen(!isOpen)} 
                     className="block md:hidden text-gray-700 focus:outline-none"
@@ -43,23 +75,30 @@ function Navbar() {
                 </button>
            </div>
 
-           {/* 4. MOBILE DRAWER OVERLAY (Slides down when isOpen is true) */}
+           {/* 4. MOBILE RIGHT-SIDE DRAWER OVERLAY */}
            <div className={`
-                absolute top-full left-0 w-full bg-white shadow-md z-40 transition-all duration-300 ease-in-out md:hidden
-                ${isOpen ? 'opacity-100 visible py-6 px-6' : 'opacity-0 invisible h-0 overflow-hidden'}
+                fixed top-0 right-0 h-screen w-64 bg-white shadow-xl z-40 transition-transform duration-300 ease-in-out md:hidden pt-20 px-6
+                ${isOpen ? 'translate-x-0' : 'translate-x-full'}
            `}>
-                <ul className="flex flex-col gap-4 font-semibold text-lg text-gray-800">
-                    <li className="border-b border-gray-50 pb-2">Home</li>
-                    <li className="border-b border-gray-50 pb-2">Shop</li>
-                    <li className="border-b border-gray-50 pb-2">Categories</li>
-                    <li className="border-b border-gray-50 pb-2">New Arrivals</li>
-                    {/* Re-appending hidden profile features to the mobile list bottom */}
-                    <li className="sm:hidden pt-2 flex gap-4 text-gray-600">
-                        <span className="flex items-center gap-2 text-sm"><FiUser size={18}/> Profile</span>
-                        <span className="flex items-center gap-2 text-sm"><FiHeart size={18}/> Wishlist</span>
+                <ul className="flex flex-col gap-5 font-semibold text-lg text-gray-800">
+                    <li className="border-b border-gray-100 pb-2">Home</li>
+                    <li className="border-b border-gray-100 pb-2">Shop</li>
+                    <li className="border-b border-gray-100 pb-2">Categories</li>
+                    <li className="border-b border-gray-100 pb-2">New Arrivals</li>
+                    <li className="sm:hidden pt-2 flex flex-col gap-3 text-gray-600 font-medium text-base">
+                        <span className="flex items-center gap-2"><FiUser size={18}/> Profile</span>
+                        <span className="flex items-center gap-2"><FiHeart size={18}/> Wishlist</span>
                     </li>
                 </ul>
            </div>
+
+           {/* Dark background overlay for mobile drawer */}
+           {isOpen && (
+               <div 
+                   onClick={() => setIsOpen(false)} 
+                   className="fixed inset-0 bg-black/30 md:hidden z-30"
+               />
+           )}
 
         </nav>
     );
