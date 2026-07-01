@@ -1,4 +1,4 @@
-import { FeaturedProductImages } from "../assets/data/imagedata";
+import { FeaturedProductImages } from "../assets/data/product.js";
 import { BiRupee, BiCart,BiReset,  BiLockAlt, BiHeadphone } from "react-icons/bi";
 import { FaTruck } from "react-icons/fa";
 

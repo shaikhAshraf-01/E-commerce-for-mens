@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react"
-import { heroImage } from "../assets/data/imagedata.js";
+import { heroImage } from "../assets/data/product.js";
 import {NavLink} from "react-router-dom"
 
 

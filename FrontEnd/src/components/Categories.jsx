@@ -1,7 +1,4 @@
-import { categoryimages } from "../assets/data/imagedata.js";
-import HOODIE from "../assets/categoryimages/hoodie1.png";
-import Tshirt from "../assets/categoryimages/tshirt.png";
-
+import { categoryimages } from "../assets/data/product.js";
 
 
 function Categories() {

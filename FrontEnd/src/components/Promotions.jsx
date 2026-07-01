@@ -1,5 +1,5 @@
-import HOODIE from "../assets/categoryimages/hoodie1.png";
-import Tshirt from "../assets/categoryimages/tshirt.png";
+import HOODIE from "../assets/productForShop/hoodie1.png";
+import Tshirt from "../assets/productForShop/tshirt1.png";
 
 // Fixed: Isolated the missing variant configuration locally
 
