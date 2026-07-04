@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { FiSearch, FiUser, FiShoppingBag, FiMenu, FiX, FiPackage, FiLogOut, FiSettings } from 'react-icons/fi';
 
 // Style Helpers (Extracted to prevent re-allocation on render)
@@ -17,6 +17,44 @@ function Navbar() {
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [searchParams] = useSearchParams();
+
+    // Local input state — kept separate from the URL so typing feels instant
+    const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+
+    // Keep the input in sync if the URL's ?search= changes from elsewhere
+    // (e.g. user clears filters on the Shop page, or hits back/forward)
+    useEffect(() => {
+        if (location.pathname === '/shop') {
+            setSearchTerm(searchParams.get('search') || '');
+        } else {
+            setSearchTerm('');
+        }
+    }, [location.pathname, searchParams]);
+
+    // Fires on every keystroke — pushes the query into the /shop URL.
+    // `replace: true` avoids flooding browser history with every letter typed.
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+
+        if (value.trim()) {
+            navigate(`/shop?search=${encodeURIComponent(value)}`, { replace: true });
+        } else if (location.pathname === '/shop') {
+            navigate('/shop', { replace: true });
+        }
+    };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            navigate(`/shop?search=${encodeURIComponent(searchTerm)}`);
+            setIsMobileOpen(false);
+        }
+    };
 
     // Close user profile dropdown when clicking anywhere outside
     useEffect(() => {
@@ -53,16 +91,28 @@ function Navbar() {
                 </ul>
 
                 {/* Main Static Search Bar */}
-                <div className="flex-1 max-w-md mx-8">
+                <form onSubmit={handleSearchSubmit} className="flex-1 max-w-md mx-8">
                     <div className="relative flex items-center w-full bg-gray-50 border border-gray-200 rounded-full px-4 py-1.5 transition-all focus-within:border-gray-400 focus-within:bg-white">
                         <FiSearch className="text-gray-400 shrink-0 mr-2" size={16} />
                         <input 
                             type="text" 
+                            value={searchTerm}
+                            onChange={handleSearchChange}
                             placeholder="Search products..." 
                             className="w-full bg-transparent text-sm text-gray-800 outline-none placeholder-gray-400"
                         />
+                        {searchTerm && (
+                            <button
+                                type="button"
+                                onClick={() => { setSearchTerm(''); navigate('/shop', { replace: true }); }}
+                                className="text-gray-400 hover:text-gray-700 ml-2"
+                                aria-label="Clear search"
+                            >
+                                <FiX size={14} />
+                            </button>
+                        )}
                     </div>
-                </div>
+                </form>
            </div>
 
            {/* 3. RIGHT UTILITIES (CART & ACCOUNT DROPDOWN) */}
@@ -124,10 +174,16 @@ function Navbar() {
            `}>
                 <div className="flex flex-col gap-6">
                     {/* Mobile Search Element */}
-                    <div className="relative flex items-center w-full bg-gray-50 border border-gray-200 rounded-full px-4 py-2 mb-2">
+                    <form onSubmit={handleSearchSubmit} className="relative flex items-center w-full bg-gray-50 border border-gray-200 rounded-full px-4 py-2 mb-2">
                         <FiSearch className="text-gray-400 shrink-0 mr-2" size={16} />
-                        <input type="text" placeholder="Search..." className="w-full bg-transparent text-sm text-gray-800 outline-none" />
-                    </div>
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            placeholder="Search..."
+                            className="w-full bg-transparent text-sm text-gray-800 outline-none"
+                        />
+                    </form>
 
                     <ul className="flex flex-col gap-5">
                         <li><NavLink to="/" onClick={() => setIsMobileOpen(false)} className={mobileNavLinkStyles}>Home</NavLink></li>
