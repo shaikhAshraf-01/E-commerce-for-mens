@@ -3,11 +3,10 @@ import { Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext"; // Adjust path to match your folder structure
 
 function Cart() {
-  const { cartItems, addToCart, removeFromCart } = useContext(CartContext);
+  const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext);
 
   // Calculate financial details dynamically
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0);
-  const shipping = subtotal > 500 || subtotal === 0 ? 0 : 40; // Free shipping over ₹500
+ const subtotal = cartItems.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);  const shipping = subtotal > 500 || subtotal === 0 ? 0 : 40; // Free shipping over ₹500
   const total = subtotal + shipping;
 
   // Empty State Layout
@@ -50,11 +49,11 @@ function Cart() {
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-full h-full object-cover object-top"
+                  className="w-full h-full object-contain object-top"
                 />
               </div>
 
-              {/* Product Info Middle Area */}
+               {/* Product Info Middle Area */}
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] md:text-xs text-gray-400 uppercase tracking-wider font-semibold">
                   {item.brand}
@@ -65,17 +64,38 @@ function Cart() {
                 <p className="text-xs text-gray-500 mt-0.5 capitalize">
                   Category: {item.category}
                 </p>
-                
-                {/* Direct Price Presentation */}
-                <h3 className="text-base font-bold text-gray-900 mt-2 block lg:hidden">
-                  ₹{item.price}
-                </h3>
               </div>
 
+              {/* Center Area: Price X Qty Interactive Counter */}
+              <div className="flex flex-col items-center justify-center gap-1 flex-shrink-0 px-2">
+                <span className="text-l text-gray-700 font-bold">
+                  ₹{item.price} ×
+                </span>
+                <div className="flex items-center border border-gray-200 rounded-lg bg-gray-50 overflow-hidden shadow-sm">
+                  <button
+                    onClick={() => updateQuantity(item.id, (item.quantity || 1) - 1)}
+                    className="px-2 py-0.5 md:py-1 text-xs font-bold text-gray-600 hover:bg-gray-200 transition-colors"
+                  >
+                    -
+                  </button>
+                  <span className="px-3 py-0.5 md:py-1 text-xs font-semibold text-gray-800 bg-white border-x border-gray-200 min-w-[24px] text-center">
+                    {item.quantity || 1}
+                  </span>
+                  <button
+                    onClick={() => updateQuantity(item.id, (item.quantity || 1) + 1)}
+                    className="px-2 py-0.5 md:py-1 text-xs font-bold text-gray-600 hover:bg-gray-200 transition-colors"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+
               {/* Right Action Side: Price & Remove Button */}
-              <div className="flex flex-col items-end justify-between h-24 md:h-28 flex-shrink-0">
-                <h3 className="text-base md:text-lg font-bold text-gray-900 hidden lg:block">
-                  ₹{item.price}
+                          {/* Right Action Side: Final Aggregated Price & Remove Button */}
+              <div className="flex flex-col items-end justify-between h-24 md:h-28 flex-shrink-0 pl-2">
+                <h3 className="text-base md:text-lg font-bold text-gray-900">
+                  ₹{item.price * (item.quantity || 1)}
                 </h3>
                 
                 <button
@@ -86,6 +106,7 @@ function Cart() {
                   <span className="hidden md:inline">Remove</span>
                 </button>
               </div>
+
             </div>
           ))}
         </div>

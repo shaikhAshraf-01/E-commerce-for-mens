@@ -16,9 +16,20 @@ function CartProvider({ children }) {
 
   const addToCart = (product) => {
     // Fix: Missing 'return' keyword inside the array update function wrapper
-    setCartItems((prevItems) => [...prevItems, product]);
+    setCartItems((prevItems) => [...prevItems, { ...product, quantity: 1 }]);
   };
+const updateQuantity = (productId, newQuantity) => {
+    // Guards against numbers lower than 1
+    if (newQuantity < 1) return; 
 
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        String(item.id) === String(productId)
+          ? { ...item, quantity: newQuantity }
+          : item
+      )
+    );
+  };
   const removeFromCart = (productId) => {
   setCartItems((prevItems) => prevItems.filter(item => String(item.id) !== String(productId)));
   };
@@ -29,6 +40,7 @@ function CartProvider({ children }) {
       value={{
         cartItems,
         addToCart,
+        updateQuantity,
         removeFromCart
       }}
     >
